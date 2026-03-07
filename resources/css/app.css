@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased text-gray-800 bg-gray-50;
+  }
+}
+
+@layer utilities {
+  .brand-gradient {
+    background: linear-gradient(135deg, #00CDFF 0%, #E62176 100%);
+  }
+
+  .brand-glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  .scrollbar-brand::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-brand::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar-brand::-webkit-scrollbar-thumb {
+    @apply bg-brand-cyan/30 rounded-full hover:bg-brand-cyan/50;
+  }
+}
