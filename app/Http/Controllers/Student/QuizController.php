@@ -25,7 +25,7 @@ class QuizController extends Controller
 
         return Inertia::render('Student/Quizzes/Show', [
             'quiz' => $quiz->load('questions.options'),
-            'content' => $content,
+            'content' => $content->load('module'),
             'latestAttempt' => $latestAttempt
         ]);
     }
@@ -45,7 +45,7 @@ class QuizController extends Controller
     public function submitAttempt(Request $request, QuizAttempt $attempt, Content $content)
     {
         $quiz = $attempt->quiz->load('questions.options');
-        $answers = $request->answers; // [question_id => option_id]
+        $answers = $request->input('answers', []); // [question_id => option_id]
 
         $totalQuestions = $quiz->questions->count();
         $correctAnswers = 0;
@@ -85,7 +85,13 @@ class QuizController extends Controller
             );
         }
 
-        return redirect()->route('student.courses.show', $content->module->course_id)
-            ->with('message', 'Quiz completed with score: ' . round($score, 2) . '%');
+        return redirect()->route('student.quizzes.show', [$quiz->id, $content->id])
+            ->with([
+                'message' => 'Quiz completed with score: ' . round($score, 2) . '%',
+                'score' => $score,
+                'correct_answers' => $correctAnswers,
+                'total_questions' => $totalQuestions,
+                'passed' => ($score >= $quiz->passing_score)
+            ]);
     }
 }

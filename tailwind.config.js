@@ -12,9 +12,6 @@ export default {
 
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
-            },
             colors: {
                 brand: {
                     cyan: '#00CDFF',

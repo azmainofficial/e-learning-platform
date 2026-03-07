@@ -1,91 +1,97 @@
 import { Link, Head } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import { motion } from 'framer-motion';
 
 export default function Welcome({ auth }) {
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center relative overflow-hidden selection:bg-blue-600 selection:text-brand-navy">
-            <Head title="Welcome to YSTRIX IT" />
+        <div className="min-h-screen bg-white flex flex-col">
+            <Head title="Welcome — StrixIT Academy" />
 
-            {/* Background Animations */}
-            <div className="absolute inset-0 z-0">
-                <motion.div
-                    animate={{
-                        scale: [1, 1.2, 1],
-                        x: [0, 100, 0],
-                        y: [0, -50, 0]
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px]"
-                />
-                <motion.div
-                    animate={{
-                        scale: [1, 1.3, 1],
-                        x: [0, -100, 0],
-                        y: [0, 50, 0]
-                    }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-600/10 blur-[130px]"
-                />
-            </div>
+            {/* Top Nav */}
+            <header className="border-b border-gray-100">
+                <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                            <ApplicationLogo className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="font-bold text-gray-900 text-base">StrixIT Academy</span>
+                    </div>
 
-            <main className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    <ApplicationLogo className="w-64 h-auto mx-auto mb-12 drop-shadow-sm" />
-
-                    <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter leading-none mb-6">
-                        Empowering the <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan via-brand-pink to-brand-orange">Next Generation.</span>
-                    </h1>
-
-                    <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
-                        The ultimate student internship portal for YSTRIX IT.
-                        Track your progress, manage resources, and build your future.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <div className="flex items-center gap-3">
                         {auth.user ? (
                             <Link
                                 href={route('dashboard')}
-                                className="px-10 py-5 bg-blue-600 text-brand-navy font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-md shadow-brand-cyan/20"
+                                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                             >
-                                Enter Dashboard
+                                Go to Dashboard
                             </Link>
                         ) : (
-                            <>
-                                <Link
-                                    href={route('login')}
-                                    className="px-10 py-5 bg-blue-600 text-brand-navy font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-white transition-all transform hover:scale-105 active:scale-95 shadow-md shadow-brand-cyan/20 w-full sm:w-auto text-center"
-                                >
-                                    Login to Portal
-                                </Link>
-
-                                <Link
-                                    href={route('register')}
-                                    className="px-10 py-5 bg-white/5 border border-gray-200 text-gray-900 font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-white/10 transition-all transform hover:scale-105 active:scale-95 w-full sm:w-auto text-center "
-                                >
-                                    Register Account
-                                </Link>
-                            </>
+                            <Link
+                                href={route('login')}
+                                className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Sign In
+                            </Link>
                         )}
                     </div>
-                </motion.div>
+                </div>
+            </header>
 
-                {/* Accent dots */}
-                <div className="mt-24 flex justify-center gap-3 opacity-20">
-                    <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-600" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-brand-orange" />
+            {/* Hero */}
+            <main className="flex-1 flex items-center justify-center">
+                <div className="max-w-2xl mx-auto px-6 py-24 text-center">
+                    {/* Badge */}
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium mb-6">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block"></span>
+                        Internship Portal
+                    </span>
+
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
+                        Learn, Build &amp;<br />
+                        <span className="text-blue-600">Grow Your Career</span>
+                    </h1>
+
+                    <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-10 max-w-lg mx-auto">
+                        The official student internship portal for YSTRIX IT Solutions.
+                        Access your courses, track progress, and complete your training.
+                    </p>
+
+                    {auth.user ? (
+                        <Link
+                            href={route('dashboard')}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
+                        >
+                            Open Dashboard
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </Link>
+                    ) : (
+                        <Link
+                            href={route('login')}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-sm"
+                        >
+                            Sign In to Portal
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </Link>
+                    )}
+
+                    {/* Feature pills */}
+                    <div className="mt-14 flex flex-wrap justify-center gap-3">
+                        {['Course Management', 'Live Assignments', 'Progress Tracking', 'Quiz &amp; Assessments', 'Project Work'].map((f) => (
+                            <span key={f} className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
+                                {f}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </main>
 
-            <footer className="absolute bottom-8 left-0 w-full text-center z-10">
-                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">
-                    &copy; {new Date().getFullYear()} YSTRIX IT SOLUTIONS. ALL RIGHTS RESERVED.
+            {/* Footer */}
+            <footer className="border-t border-gray-100 py-5">
+                <p className="text-center text-xs text-gray-400">
+                    &copy; {new Date().getFullYear()} YSTRIX IT Solutions. All rights reserved.
                 </p>
             </footer>
         </div>

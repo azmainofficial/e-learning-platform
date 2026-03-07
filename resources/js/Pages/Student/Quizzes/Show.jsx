@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import {
@@ -15,10 +15,9 @@ import {
 export default function Show({ auth, quiz, content, latestAttempt }) {
     const [gameState, setGameState] = useState('intro'); // intro, taking, result
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [answers, setAnswers] = useState({});
     const [timeLeft, setTimeLeft] = useState(quiz.time_limit * 60);
 
-    const { post, processing } = useForm({
+    const { data, setData, post, processing } = useForm({
         answers: {}
     });
 
@@ -49,17 +48,7 @@ export default function Show({ auth, quiz, content, latestAttempt }) {
     };
 
     const submitQuiz = () => {
-        // We need the attempt ID. In a real scenario, we'd get it from the successful startAttempt call session.
-        // For simplicity here, let's assume we handle submission through the startAttempt logic or a specialized route.
-        // I created student.quizzes.attempt.submit(attempt).
-        // Let's grab the attempt from the props or flash if it was just created.
-
-        // Since startAttempt redirects back, we check the session flash via page props (if available) 
-        // OR we just find the latest in-progress attempt for this quiz/user.
-        // For now, I'll use a hacky latest attempt check on server-side submitAttempt.
-
         post(route('student.quizzes.attempt.submit', [latestAttempt?.id || 0, content.id]), {
-            data: { answers },
             onSuccess: () => setGameState('result')
         });
     };
@@ -75,7 +64,7 @@ export default function Show({ auth, quiz, content, latestAttempt }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-900 leading-tight">Assessment Desk</h2>}
+            header="Assessment Desk"
         >
             <Head title={`Quiz: ${quiz.title}`} />
 
@@ -153,14 +142,14 @@ export default function Show({ auth, quiz, content, latestAttempt }) {
                                     {currentQuestion.options.map((option) => (
                                         <button
                                             key={option.id}
-                                            onClick={() => setAnswers({ ...answers, [currentQuestion.id]: option.id })}
-                                            className={`w-full flex items-center justify-between p-6 rounded-[1.5rem] border-2 transition-all text-left ${answers[currentQuestion.id] === option.id
+                                            onClick={() => setData('answers', { ...data.answers, [currentQuestion.id]: option.id })}
+                                            className={`w-full flex items-center justify-between p-6 rounded-[1.5rem] border-2 transition-all text-left ${data.answers[currentQuestion.id] === option.id
                                                 ? 'bg-blue-600/20 border-brand-cyan text-gray-900 shadow-lg'
-                                                : 'bg-white/5 border-gray-200 text-gray-500 hover:border-gray-2000'
+                                                : 'bg-white/5 border-gray-200 text-gray-500 hover:border-gray-200'
                                                 }`}
                                         >
                                             <span className="font-bold text-lg">{option.option_text}</span>
-                                            {answers[currentQuestion.id] === option.id && <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center"><CheckCircleIcon className="w-4 h-4 text-brand-navy stroke-[4]" /></div>}
+                                            {data.answers[currentQuestion.id] === option.id && <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center"><CheckCircleIcon className="w-4 h-4 text-brand-navy stroke-[4]" /></div>}
                                         </button>
                                     ))}
                                 </div>
@@ -195,6 +184,63 @@ export default function Show({ auth, quiz, content, latestAttempt }) {
                                 </div>
                             </motion.div>
                         </div>
+                    )}
+
+                    {gameState === 'result' && (
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-md overflow-hidden relative"
+                        >
+                            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-cyan via-brand-pink to-brand-orange"></div>
+
+                            <div className={`p-6 rounded-[2rem] w-fit mx-auto mb-8 ${latestAttempt?.score >= quiz.passing_score ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                                {latestAttempt?.score >= quiz.passing_score ? (
+                                    <CheckCircleIcon className="w-16 h-16" />
+                                ) : (
+                                    <XCircleIcon className="w-16 h-16" />
+                                )}
+                            </div>
+
+                            <h1 className="text-4xl font-black text-gray-900 mb-2 italic">
+                                {latestAttempt?.score >= quiz.passing_score ? 'Mission Accomplished!' : 'Mission Failed'}
+                            </h1>
+                            <p className="text-gray-500 text-lg mb-10 max-w-sm mx-auto">
+                                {latestAttempt?.score >= quiz.passing_score
+                                    ? "Great job! You've successfully completed this module's mastery test."
+                                    : "You didn't reach the required mastery score. You may attempt the test again."}
+                            </p>
+
+                            <div className="bg-gray-50 p-8 rounded-[2rem] border border-gray-100 mb-10 inline-block min-w-[200px]">
+                                <div className={`text-6xl font-black italic mb-2 ${latestAttempt?.score >= quiz.passing_score ? 'text-green-500' : 'text-red-500'}`}>
+                                    {Math.round(latestAttempt?.score)}%
+                                </div>
+                                <div className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Calculated Score</div>
+                            </div>
+
+                            <div className="flex flex-col items-center gap-4">
+                                <Link
+                                    href={content.module ? route('student.courses.show', content.module.course_id) : '#'}
+                                    className="px-12 py-4 bg-gray-900 text-white font-black text-lg rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-gray-900/10"
+                                >
+                                    Proceed to Course
+                                </Link>
+
+                                {latestAttempt?.score < quiz.passing_score && (
+                                    <button
+                                        onClick={() => {
+                                            setGameState('taking');
+                                            setCurrentQuestionIndex(0);
+                                            setData('answers', {});
+                                        }}
+                                        className="text-gray-500 font-bold hover:text-gray-900 text-sm flex items-center gap-2 group"
+                                    >
+                                        <ArrowPathIcon className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+                                        Initialize Reboot
+                                    </button>
+                                )}
+                            </div>
+                        </motion.div>
                     )}
 
                 </div>

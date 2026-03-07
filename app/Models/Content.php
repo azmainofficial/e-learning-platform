@@ -9,7 +9,7 @@ class Content extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['module_id', 'title', 'type', 'data', 'order'];
+    protected $fillable = ['module_id', 'title', 'type', 'data', 'order', 'xp'];
 
     protected $casts = [
         'data' => 'array',

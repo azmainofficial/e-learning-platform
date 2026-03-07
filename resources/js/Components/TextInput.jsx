@@ -14,7 +14,7 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
             {...props}
             type={type}
             className={
-                'border-datacamp-gray-200 bg-white text-datacamp-gray-900 focus:border-datacamp-navy focus:ring-datacamp-navy rounded-lg shadow-sm ' +
+                'border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-blue-500 rounded-lg shadow-sm ' +
                 className
             }
             ref={input}
