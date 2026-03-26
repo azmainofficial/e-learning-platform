@@ -3,27 +3,29 @@ import { Link } from '@inertiajs/react';
 
 export default function Guest({ children }) {
     return (
-        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-50 relative overflow-hidden">
-            <div className="z-10 mb-8 flex flex-col items-center">
-                <Link href="/" className="flex items-center gap-3">
-                    <ApplicationLogo className="w-12 h-12 text-blue-600" />
-                    <div className="flex flex-col whitespace-nowrap">
-                        <span className="font-bold text-2xl text-gray-900 leading-tight">StrixIT</span>
-                        <span className="text-sm text-blue-600 font-medium">Academy</span>
+        <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4">
+            {/* Logo */}
+            <div className="mb-8 text-center">
+                <Link href="/" className="inline-flex flex-col items-center gap-2">
+                    <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <ApplicationLogo className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                        <span className="block text-lg font-bold text-gray-900 leading-none">StrixIT</span>
+                        <span className="block text-xs text-gray-400 mt-0.5">Academy</span>
                     </div>
                 </Link>
             </div>
 
-            <div className="w-full sm:max-w-md mt-6 p-8 bg-white border border-gray-200 shadow-sm sm:rounded-xl z-10">
+            {/* Card */}
+            <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-200 shadow-sm p-8">
                 {children}
             </div>
 
-            {/* Subtle bottom accent, Coursera/Datacamp style footer lines */}
-            <div className="absolute bottom-0 w-full h-1 flex">
-                <div className="flex-1 bg-blue-600" />
-                <div className="flex-1 bg-green-500" />
-                <div className="flex-1 bg-purple-600" />
-            </div>
+            {/* Footer */}
+            <p className="mt-8 text-xs text-gray-400">
+                &copy; {new Date().getFullYear()} YSTRIX IT Solutions
+            </p>
         </div>
     );
 }

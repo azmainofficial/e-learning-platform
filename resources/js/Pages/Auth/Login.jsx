@@ -3,7 +3,6 @@ import Checkbox from '@/Components/Checkbox';
 import GuestLayout from '@/Layouts/GuestLayout';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -27,77 +26,90 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title="Sign In" />
+
+            {/* Header */}
+            <div className="mb-6">
+                <h2 className="text-xl font-bold text-gray-900">Sign in</h2>
+                <p className="text-sm text-gray-500 mt-1">Enter your credentials to access the portal</p>
+            </div>
 
             {status && (
-                <div className="mb-4 font-medium text-sm text-green-600 bg-green-50 p-3 rounded-md">
+                <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-100 px-4 py-3 rounded-lg">
                     {status}
                 </div>
             )}
 
-            <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Welcome Back</h2>
-                <p className="text-gray-500 text-sm mt-1">Sign in to continue your learning journey</p>
-            </div>
-
-            <form onSubmit={submit} className="space-y-5">
+            <form onSubmit={submit} className="space-y-4">
+                {/* Email */}
                 <div>
-                    <InputLabel htmlFor="email" value="Email Address" className="text-gray-700 font-semibold" />
+                    <InputLabel htmlFor="email" value="Email address" className="text-sm font-medium text-gray-700" />
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 rounded-md sm:text-sm"
+                        className="mt-1.5 block w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500"
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
                     />
-                    <InputError message={errors.email} className="mt-2 text-sm text-red-600" />
+                    <InputError message={errors.email} className="mt-1.5 text-xs text-red-500" />
                 </div>
 
+                {/* Password */}
                 <div>
-                    <InputLabel htmlFor="password" value="Password" className="text-gray-700 font-semibold" />
+                    <div className="flex items-center justify-between mb-1.5">
+                        <InputLabel htmlFor="password" value="Password" className="text-sm font-medium text-gray-700" />
+                        {canResetPassword && (
+                            <Link
+                                href={route('password.request')}
+                                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                            >
+                                Forgot password?
+                            </Link>
+                        )}
+                    </div>
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full bg-white border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 rounded-md sm:text-sm"
+                        className="block w-full rounded-lg border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500"
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-                    <InputError message={errors.password} className="mt-2 text-sm text-red-600" />
+                    <InputError message={errors.password} className="mt-1.5 text-xs text-red-500" />
                 </div>
 
-                <div className="flex items-center justify-between">
-                    <label className="flex items-center">
-                        <Checkbox
-                            name="remember"
-                            checked={data.remember}
-                            onChange={(e) => setData('remember', e.target.checked)}
-                            className="text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        <span className="ms-2 text-sm text-gray-600">Remember me</span>
+                {/* Remember me */}
+                <div className="flex items-center gap-2">
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        checked={data.remember}
+                        onChange={(e) => setData('remember', e.target.checked)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                        Keep me signed in
                     </label>
-                    {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-                        >
-                            Forgot password?
-                        </Link>
-                    )}
                 </div>
 
-                <div className="pt-2 flex items-center justify-end">
-                    <button
-                        className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-semibold text-gray-900 bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50"
-                        disabled={processing}
-                    >
-                        Sign In
-                    </button>
-                </div>
+                {/* Submit */}
+                <button
+                    type="submit"
+                    disabled={processing}
+                    className="w-full mt-2 flex justify-center items-center py-2.5 px-4 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                    {processing ? (
+                        <svg className="w-4 h-4 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                    ) : null}
+                    {processing ? 'Signing in...' : 'Sign in'}
+                </button>
             </form>
         </GuestLayout>
     );

@@ -65,21 +65,33 @@ class ShieldController extends Controller
             abort(403);
         }
 
-        // The URL is usually /storage/PDF_PATH
-        // We need the absolute path on the disk
-        $url = $content->data['url'];
-        $path = str_replace('/storage/', '', $url);
+        $url = $content->data['url'] ?? '';
 
-        if (!Storage::disk('public')->exists($path)) {
-            abort(404);
+        // If it's an external URL, we can't really shield it from iframe iframes, 
+        // but we can at least show it.
+        if (filter_var($url, FILTER_VALIDATE_URL) && !str_contains($url, request()->getHttpHost())) {
+            return redirect($url);
         }
 
-        return response()->file(storage_path('app/public/' . $path), [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
-            // Prevent some browser toolbars if possible (not guaranteed but headers help)
-            'X-Frame-Options' => 'DENY', // This might break iframe, wait, let's use SAMEORIGIN
-            'X-Content-Type-Options' => 'nosniff',
-        ]);
+        // Clean path to check storage
+        $path = str_replace('/storage/', '', $url);
+        // If it's still a full URL but internal, or some other variation
+        $path = parse_url($path, PHP_URL_PATH);
+        $path = ltrim($path, '/');
+
+        if (Storage::disk('public')->exists($path)) {
+            return response()->file(storage_path('app/public/' . $path), [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . basename($path) . '"',
+                'X-Content-Type-Options' => 'nosniff',
+            ]);
+        }
+
+        // Final fallback: just redirect to the URL if we can't find it locally
+        if ($url) {
+            return redirect($url);
+        }
+
+        abort(404);
     }
 }

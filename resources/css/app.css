@@ -3,29 +3,55 @@
 @tailwind utilities;
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     @apply antialiased text-gray-800 bg-gray-50;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 }
 
 @layer utilities {
-  .brand-gradient {
-    background: linear-gradient(135deg, #00CDFF 0%, #E62176 100%);
+  /* Thin custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-300;
   }
 
-  .brand-glass {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  /* Smooth page transitions */
+  .page-transition {
+    @apply transition-all duration-200 ease-in-out;
   }
 
-  .scrollbar-brand::-webkit-scrollbar {
-    width: 6px;
+  /* Card */
+  .card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-sm;
   }
 
-  .scrollbar-brand::-webkit-scrollbar-track {
-    @apply bg-transparent;
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  .scrollbar-brand::-webkit-scrollbar-thumb {
-    @apply bg-brand-cyan/30 rounded-full hover:bg-brand-cyan/50;
+  /* Focus ring — consistent across all interactive elements */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1;
   }
 }

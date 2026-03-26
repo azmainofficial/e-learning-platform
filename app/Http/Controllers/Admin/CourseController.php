@@ -29,6 +29,9 @@ class CourseController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'level' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'instructor_title' => 'nullable|string',
             'cover_image' => 'nullable|image|max:2048',
         ]);
 
@@ -69,6 +72,9 @@ class CourseController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'level' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'instructor_title' => 'nullable|string',
             'cover_image' => 'nullable|image|max:2048',
         ]);
 
@@ -106,12 +112,14 @@ class CourseController extends Controller
                 if ($module) {
                     $module->update([
                         'title' => $moduleData['title'],
+                        'description' => $moduleData['description'] ?? null,
                         'order' => $mIndex,
                     ]);
                 }
             } else {
                 $module = $course->modules()->create([
                     'title' => $moduleData['title'],
+                    'description' => $moduleData['description'] ?? null,
                     'order' => $mIndex,
                     'status' => 'active'
                 ]);
@@ -132,6 +140,7 @@ class CourseController extends Controller
                         $content->update([
                             'title' => $contentData['title'],
                             'type' => $contentData['type'],
+                            'xp' => $contentData['xp'] ?? 100,
                             'data' => $contentData['data'],
                             'order' => $cIndex
                         ]);
@@ -140,6 +149,7 @@ class CourseController extends Controller
                     $content = $module->contents()->create([
                         'title' => $contentData['title'],
                         'type' => $contentData['type'],
+                        'xp' => $contentData['xp'] ?? 100,
                         'data' => $contentData['data'],
                         'order' => $cIndex
                     ]);

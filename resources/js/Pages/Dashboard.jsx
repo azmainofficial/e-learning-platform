@@ -3,17 +3,11 @@ import { Head } from '@inertiajs/react';
 
 export default function Dashboard({ auth }) {
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>}
-        >
+        <AuthenticatedLayout user={auth.user} header="Dashboard">
             <Head title="Dashboard" />
-
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
-                    </div>
+            <div className="max-w-4xl mx-auto py-4">
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                    <p className="text-gray-600 text-sm">You&apos;re signed in. Welcome back, <span className="font-semibold text-gray-900">{auth.user.name}</span>.</p>
                 </div>
             </div>
         </AuthenticatedLayout>
